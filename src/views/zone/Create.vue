@@ -42,9 +42,6 @@ button.btn {
   text-align: center;
   width: 100%;
 }
-.panel {
-  padding: 1rem 0.5rem;
-}
 </style>
 <script>
 import Navbar from "@components/Navbar.vue";
@@ -74,7 +71,7 @@ export default {
         zone_name: this.zone_name,
       })
         .then((res) => {
-          if (res.status == "ok") {
+          if (res.status === "ok") {
             this.$message.success("添加成功");
             this.$router.push("/dashboard");
           } else {

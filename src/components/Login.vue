@@ -10,16 +10,27 @@
         <el-input
           class="item"
           placeholder="请输入您的cloudflare邮箱"
-          v-model="username"
+          v-model="user.email"
         >
           <template slot="prepend"><i class="el-icon-message"></i></template>
         </el-input>
         <el-input
-          class="item"
-          type="password"
-          placeholder="请输入您的cloudflare密码"
-          v-model="password"
-          @keyup.enter.native="login"
+            class="item"
+            type="password"
+            placeholder="请输入您的cloudflare密码"
+            v-model="user.password"
+            @keyup.enter.native="login"
+            v-if="$V8CDN.authType==='partner'"
+        >
+          <template slot="prepend"><i class="el-icon-lock"></i></template>
+        </el-input>
+        <el-input
+            class="item"
+            type="password"
+            placeholder="请输入您的cloudflare global key"
+            v-model="user.user_api_key"
+            @keyup.enter.native="login"
+            v-else
         >
           <template slot="prepend"><i class="el-icon-lock"></i></template>
         </el-input>
@@ -28,7 +39,7 @@
     </el-card>
   </div>
 </template>
-<style>
+<style scoped>
 .login-panel {
   margin: auto;
   display: flex;
@@ -74,6 +85,7 @@
 import { Card, Input, Button } from "element-ui";
 import { fetchPost } from "@utils/requests";
 import { setToken, setUsername } from "@utils/functions";
+
 export default {
   name: "Login",
   components: {
@@ -84,21 +96,28 @@ export default {
   data() {
     return {
       loading: false,
-      username: "",
-      password: "",
+      user:{
+        email: "",
+        password: "",
+        user_api_key: "",
+      },
+
     };
   },
   methods: {
     login() {
       this.loading = true;
-      fetchPost("/auth/login", {
-        username: this.username,
-        password: this.password,
-      })
+      let params = Object.assign({},this.user)
+      if (this.$V8CDN.authType === 'partner'){
+        delete params['user_api_key']
+      }else{
+        delete params['password']
+      }
+      fetchPost("/auth/login", params)
         .then((res) => {
           if (res.status == "ok") {
             setToken(res.data.token);
-            setUsername(this.username);
+            setUsername(this.user.email);
             this.$message.success("登录成功");
             this.$router.push("/dashboard");
           } else {

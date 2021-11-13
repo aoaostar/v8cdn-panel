@@ -17,84 +17,85 @@
             >
             <el-breadcrumb-item>Edit</el-breadcrumb-item>
           </el-breadcrumb>
-          <div class="item">
-            <div class="title">记录名称:</div>
-            <div class="content">
-              <el-input placeholder="请输入记录名称" v-model="dnsrecord.name">
-              </el-input>
+          <div class="form">
+            <div class="item">
+              <div class="title">记录名称:</div>
+              <div class="content">
+                <el-input placeholder="请输入记录名称" v-model="dnsrecord.name">
+                </el-input>
+              </div>
             </div>
-          </div>
-          <div class="item">
-            <div class="title">记录类型:</div>
-            <div class="content">
-              <el-select v-model="dnsrecord.type" placeholder="请选择记录类型">
-                <el-option
-                  v-for="item in dnsrecord_types"
-                  :key="item"
-                  :label="item"
-                  :value="item"
+            <div class="item">
+              <div class="title">记录类型:</div>
+              <div class="content">
+                <el-select v-model="dnsrecord.type" placeholder="请选择记录类型">
+                  <el-option
+                      v-for="item in dnsrecord_types"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="item">
+              <div class="title">记录内容:</div>
+              <div class="content">
+                <el-input
+                    placeholder="请输入记录内容"
+                    v-model="dnsrecord.content"
+                    type="textarea"
+                    :rows="5"
                 >
-                </el-option>
-              </el-select>
+                </el-input>
+              </div>
             </div>
-          </div>
-          <div class="item">
-            <div class="title">记录内容:</div>
-            <div class="content">
-              <el-input
-                placeholder="请输入记录内容"
-                v-model="dnsrecord.content"
-                type="textarea"
-                :rows="5"
-              >
-              </el-input>
+            <div class="item">
+              <div class="title">TTL:</div>
+              <div class="content">
+                <el-select v-model="dnsrecord.ttl" placeholder="请选择TTL">
+                  <el-option
+                      v-for="item in dnsrecord_ttl"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
             </div>
-          </div>
-          <div class="item">
-            <div class="title">TTL:</div>
-            <div class="content">
-              <el-select v-model="dnsrecord.ttl" placeholder="请选择TTL">
-                <el-option
-                  v-for="item in dnsrecord_ttl"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+            <div class="item">
+              <div class="title">CDN:</div>
+              <div class="content">
+                <el-switch
+                    v-model="dnsrecord.proxied"
+                    active-text="加速"
+                    inactive-text="回源"
                 >
-                </el-option>
-              </el-select>
+                </el-switch>
+              </div>
             </div>
-          </div>
-          <div class="item">
-            <div class="title">CDN:</div>
-            <div class="content">
-              <el-switch
-                v-model="dnsrecord.proxied"
-                active-text="加速"
-                inactive-text="回源"
-              >
-              </el-switch>
-            </div>
-          </div>
-          <el-button
-            class="btn"
-            v-loading="submit_loading"
-            type="primary"
-            @click="submit"
+            <el-button
+                class="btn"
+                v-loading="submit_loading"
+                type="primary"
+                @click="submit"
             >提交</el-button
-          >
+            >
+          </div>
         </el-card>
       </el-main>
     </el-container>
   </div>
 </template>
 <style scoped>
-.panel {
-  padding: 1rem 0.5rem;
+.form{
+  margin-top: 2rem;
 }
 .item {
   display: flex;
   margin: 1rem 0;
-  /* box-sizing: border-box; */
 }
 .item .title {
   width: 7rem;
@@ -246,8 +247,12 @@ export default {
         dnsrecord: this.dnsrecord,
       })
         .then((res) => {
-          if (res.status == "ok") {
+          if (res.status === "ok") {
             this.$message.success("更新成功");
+            this.$router.push({
+              name: 'ZoneDnsrecords',
+              params: { id: this.$route.params.zone_id },
+            })
           } else {
             this.$message.error(res.message);
           }
@@ -261,7 +266,7 @@ export default {
         zone_id,
         record_id,
       }).then((res) => {
-        if (res.status == "ok") {
+        if (res.status === "ok") {
           this.dnsrecord = res.data;
           this.loading = false;
         } else {

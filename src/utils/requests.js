@@ -30,7 +30,7 @@ instance.interceptors.response.use((res) => {
     //对响应数据做些事
     return res;
 }, (error) => {
-    if (error.response.status == 401) {
+    if (error.response.status === 401) {
         logout()
         router.push({
             name: 'Login'
@@ -90,6 +90,20 @@ export function fetchDelete(url, params) {
 export function fetchPut(url, params) {
     return new Promise((resolve, reject) => {
         instance.put(url, params)
+            .then(response => {
+                resolve(response.data);
+            }, err => {
+                reject(err);
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+// 返回一个Promise(发送patch请求)
+export function fetchPatch(url, params) {
+    return new Promise((resolve, reject) => {
+        instance.patch(url, params)
             .then(response => {
                 resolve(response.data);
             }, err => {

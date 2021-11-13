@@ -4,6 +4,7 @@ import Home from '@views/Home.vue'
 import Login from '@views/Login.vue'
 import Dashboard from "@views/Dashboard"
 import ZoneCreate from "@views/zone/Create"
+import ZoneControl from "@views/zone/Control"
 import ZoneDnsrecords from "@views/zone/Dnsrecords"
 import DnsrecordEdit from "@views/dnsrecord/Edit"
 import DnsrecordCreate from "@views/dnsrecord/Create"
@@ -32,6 +33,11 @@ const routes = [{
     path: '/zone/create',
     name: 'ZoneCreate',
     component: ZoneCreate
+  },
+  {
+    path: '/zone/:zone_id/control',
+    name: 'ZoneControl',
+    component: ZoneControl
   },
   {
     path: '/zone/:zone_id/dnsrecords',

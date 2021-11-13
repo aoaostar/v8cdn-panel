@@ -5,7 +5,7 @@
       <el-main class="panel">
         <el-card shadow="always">
           <el-breadcrumb class="breadcrumb" separator="/">
-            <el-breadcrumb-item>控制台</el-breadcrumb-item>
+                <el-breadcrumb-item>Home</el-breadcrumb-item>
           </el-breadcrumb>
           <el-table
             height="30rem"
@@ -36,19 +36,27 @@
                 <el-tag type="danger" v-else>{{ scope.row.status }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="actions" label="操作" width="200" align="center">
+            <el-table-column prop="actions" label="操作" width="300" align="center">
               <template slot-scope="scope">
                 <el-button-group>
                   <el-button
-                    size="mini"
-                    @click="
+                      size="mini"
+                      @click="
+                      $router.push({
+                        name: 'ZoneControl',
+                        params: { zone_id: scope.row.id },
+                      })
+                    "
+                  >Manage</el-button>
+                  <el-button
+                      size="mini"
+                      @click="
                       $router.push({
                         name: 'ZoneDnsrecords',
                         params: { zone_id: scope.row.id },
                       })
                     "
-                    >Manage</el-button
-                  >
+                  >DNS Record</el-button>
 
                   <el-popconfirm
                     :title="`确定删除${scope.row.name}吗？`"
@@ -68,12 +76,7 @@
   </div>
 </template>
 <style scoped>
-.breadcrumb {
-  margin: 1rem 0;
-}
-.panel {
-  padding: 1rem 0.5rem;
-}
+
 </style>
 <script>
 import Navbar from "@components/Navbar.vue";
@@ -124,7 +127,7 @@ export default {
     },
     get_zones(page = 1, limit = 10) {
       fetchGet("/api/zones", { page: page, limit: limit }).then((res) => {
-        if (res.status == "ok") {
+        if (res.status === "ok") {
           this.zones = res.data;
           this.loading = false;
         } else {

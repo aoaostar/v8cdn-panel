@@ -100,9 +100,6 @@
   </div>
 </template>
 <style scoped>
-.panel {
-  padding: 1rem 0.5rem;
-}
 .proxied {
   font-size: 2.3rem;
   cursor: pointer;
@@ -113,7 +110,6 @@
 .panel .header {
   display: flex;
   justify-content: space-between;
-  margin: 1rem 0;
 }
 </style>
 <script>
